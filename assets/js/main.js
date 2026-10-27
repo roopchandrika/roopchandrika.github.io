@@ -268,12 +268,12 @@
   function renderTimeline(list, items) {
     list.innerHTML = items
       .map(
-        (it) => `<li class="timeline__item reveal${it.when === "Now" ? " is-now" : ""}">
+        (it) => `<li class="timeline__item reveal${/Present/.test(it.when) ? " is-now" : ""}">
           <div class="timeline__card">
             ${it.when ? `<div class="timeline__when">${esc(it.when)}</div>` : ""}
             <h4 class="timeline__title">${esc(it.title)}</h4>
             ${it.org ? `<div class="timeline__org">${esc(it.org)}</div>` : ""}
-            <ul>${it.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+            ${it.points.length ? `<ul>${it.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}
           </div>
         </li>`
       )

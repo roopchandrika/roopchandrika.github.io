@@ -28,33 +28,49 @@ window.PORTFOLIO = {
 
   work: [
     {
-      when: "Now",
+      when: "Jan 2026 – Present",
       title: "AI Engineer",
-      org: "ThinkDigits",
+      org: "ThinkDigits Inc",
       points: [
-        "Design AI agents and build Python-based backend services",
-        "Develop rule-driven production scheduling systems",
-        "Model real shop-floor constraints: machine availability, worker skills, maintenance windows, materials, setup and changeover time, and priority rules",
+        "Delivered a full-stack production scheduling application (React, FastAPI) and presented scheduling strategies to enterprise clients",
+        "Built a reusable constraint engine and CP-SAT/MILP models for dynamic rescheduling, WIP handling and Gantt views",
+        "Shipped YOLO defect detection (training data grown 50×) and Isolation Forest anomaly detection over 1,800+ sensor files",
       ],
     },
     {
-      when: "Previously",
-      title: "Healthcare AI and data platforms",
-      org: "",
+      when: "Jan 2025 – Jan 2026",
+      title: "Software and AI Engineer",
+      org: "Esurgi, Inc",
       points: [
-        "Healthcare AI systems and ML model deployment",
-        "Streaming data pipelines",
-        "Secure microservices",
+        "Python microservices and REST APIs for real-time healthcare data",
+        "End-to-end ML pipelines on streaming data (PySpark, Kafka) with automated evaluation",
+        "CI/CD, observability and HIPAA-compliant data handling",
       ],
     },
     {
-      when: "Previously",
-      title: "Associate Developer, fintech",
-      org: "",
+      when: "Jan 2024 – Dec 2024",
+      title: "Graduate Teaching Assistant",
+      org: "University of Maryland, Baltimore County",
       points: [
-        "High-volume financial transaction data, including real-time payment systems handling 15M+ transactions a day",
-        "AI-driven solutions and workflow optimization",
+        "BERT/transformer recommendation features for an AI career platform, on pipelines processing 500K+ records",
+        "Mentored students on software engineering, data structures and ML system design",
       ],
+    },
+    {
+      when: "Nov 2020 – Dec 2022",
+      title: "Data Engineer",
+      org: "National Payments Corporation of India",
+      points: [
+        "Cut transaction processing latency from 24 hours to under 30 minutes with event-driven microservices (Spring Boot, Kafka)",
+        "Pipelines processing 15M+ daily transactions with anomaly detection for fraud and reconciliation",
+        "10× faster database performance across 50M+ records; NLP chatbot serving 1,000+ daily queries",
+      ],
+    },
+    {
+      when: "May 2020 – Nov 2020",
+      title: "Junior Data Engineer Intern",
+      org: "Cognibot Labs",
+      points: ["Deployed Python ML models behind REST APIs and Streamlit apps"],
     },
   ],
 
@@ -63,13 +79,22 @@ window.PORTFOLIO = {
       when: "",
       title: "Master's in Data Science",
       org: "University of Maryland, Baltimore County (UMBC)",
-      points: ["Graduate Assistant: teaching, project management and research"],
+      points: ["GPA 3.9 / 4.0", "Graduate Teaching Assistant, 2024"],
     },
     {
       when: "2017 – 2021",
       title: "Bachelor's in Computer Science",
-      org: "Sathyabama University",
-      points: ["Gold Medal, Department Topper"],
+      org: "Sathyabama Institute of Science and Technology",
+      points: [
+        "Gold Medal: 1st rank in Computer Science and Engineering (CGPA 9.79 / 10)",
+        "IEEE publication: Disease Prediction Using Machine Learning (2021)",
+      ],
+    },
+    {
+      when: "Certification",
+      title: "Microsoft Certified: Azure Data Fundamentals",
+      org: "DP-900",
+      points: [],
     },
   ],
 

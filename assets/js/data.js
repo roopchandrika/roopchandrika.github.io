@@ -76,7 +76,7 @@ window.PORTFOLIO = {
 
   education: [
     {
-      when: "",
+      when: "Jan 2023 – Dec 2024",
       title: "Master's in Data Science",
       org: "University of Maryland, Baltimore County (UMBC)",
       points: ["GPA 3.9 / 4.0", "Graduate Teaching Assistant, 2024"],

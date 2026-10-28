@@ -108,9 +108,11 @@ window.PORTFOLIO = {
     { id: "learning", label: "Learning" },
   ],
 
+  // pinned: true = pinned on GitHub, shown on the home page; the rest appear on work.html
   projects: [
     {
       id: "jobshop-agent",
+      pinned: true,
       title: "Job-Shop Disruption Assistant",
       period: "2026",
       categories: ["ai"],
@@ -132,6 +134,7 @@ window.PORTFOLIO = {
     },
     {
       id: "fraud-investigator",
+      pinned: true,
       title: "Agentic Payment Fraud Investigator",
       period: "2026",
       categories: ["ai", "data"],
@@ -153,6 +156,7 @@ window.PORTFOLIO = {
     },
     {
       id: "complaint-intelligence-copilot",
+      pinned: true,
       title: "Complaint Intelligence Copilot",
       period: "2026 · in progress",
       categories: ["ai", "data"],
@@ -173,6 +177,7 @@ window.PORTFOLIO = {
     },
     {
       id: "ai-agents-guidebook-projects",
+      pinned: true,
       title: "12 AI Agent Projects",
       period: "2026",
       categories: ["ai"],
@@ -242,6 +247,7 @@ window.PORTFOLIO = {
     },
     {
       id: "powerbi",
+      pinned: true,
       title: "20 Power BI Dashboards",
       period: "2025",
       categories: ["bi"],
@@ -295,6 +301,7 @@ window.PORTFOLIO = {
     },
     {
       id: "emotion-detection",
+      pinned: true,
       title: "Real-Time Emotion Detection",
       period: "Apr – May 2024",
       categories: ["ml"],

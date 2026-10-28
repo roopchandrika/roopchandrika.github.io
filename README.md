@@ -22,6 +22,10 @@ It has light and dark themes, works on phones, and respects the "reduce motion" 
 All text lives in [`assets/js/data.js`](assets/js/data.js): profile, stats, work, education, projects, dashboards and skills.
 To add a project, copy an entry in `projects`, change the fields, and put its image in `assets/img/projects/` (WebP, about 1400 px wide).
 
+Projects with `pinned: true` (the repos pinned on GitHub) appear on the home page, `index.html`.
+Every other project appears on the Additional work page, `work.html`, which has the filters and search.
+When you change your GitHub pins, move the `pinned: true` lines to match.
+
 ## Run locally
 
 ```bash

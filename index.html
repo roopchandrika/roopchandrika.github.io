@@ -31,7 +31,7 @@
     })();
   </script>
 </head>
-<body>
+<body data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="nav" id="top">
@@ -45,6 +45,7 @@
           <li><a href="#deep-dives">Deep dives</a></li>
           <li><a href="#dashboards">Dashboards</a></li>
           <li><a href="#skills">Skills</a></li>
+          <li><a href="work.html">Additional work</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -138,20 +139,16 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="kicker">03 · Projects</p>
-          <h2>Everything I've built, in one place</h2>
-          <p class="section__sub">Filter by area, search, or pick a skill below. Open any card for the details.</p>
+          <h2>Featured projects</h2>
+          <p class="section__sub">The six projects pinned on my GitHub. Open any card for the details.</p>
         </header>
-        <div class="toolbar reveal">
-          <div class="chips" id="category-chips" role="group" aria-label="Filter projects by area"></div>
-          <label class="search">
-            <span class="sr-only">Search projects</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <input id="project-search" type="search" placeholder="Search: Kafka, agents…" autocomplete="off" />
-          </label>
-        </div>
         <p class="filter-note" id="filter-note" hidden></p>
         <div class="grid" id="project-grid" aria-live="polite"></div>
-        <p class="empty" id="project-empty" hidden>No projects match that yet. Try another word or clear the filter.</p>
+        <p class="empty" id="project-empty" hidden>No projects match that yet.</p>
+        <div class="more-work reveal">
+          <p>Data engineering sprints, machine learning projects, a team web app, notebooks and coursework.</p>
+          <a class="btn btn--ghost" href="work.html">Explore additional work <span id="more-count"></span> →</a>
+        </div>
       </div>
     </section>
 
@@ -242,7 +239,7 @@
         <header class="section__head reveal">
           <p class="kicker">06 · Skills</p>
           <h2>Tools I reach for</h2>
-          <p class="section__sub">The number on a skill is how many projects here use it. Click one to see them.</p>
+          <p class="section__sub">The number on a skill is how many of my projects use it, featured and additional. Click one to see them.</p>
         </header>
         <div class="skills" id="skills-list"></div>
       </div>

@@ -6,6 +6,8 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  // index.html shows the GitHub-pinned projects; work.html shows the rest
+  const HOME = document.body.dataset.page !== "work";
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -111,7 +113,7 @@
   window.addEventListener("hashchange", () => setTimeout(revealVisible, 120));
 
   /* ---------- Hero network ---------- */
-  const hero = (function () {
+  const hero = !$("#hero-canvas") ? null : (function () {
     const canvas = $("#hero-canvas");
     const ctx = canvas.getContext("2d");
     let w, h, dpr, nodes = [], raf = null, visible = true;
@@ -222,6 +224,7 @@
   /* ---------- Rotator ---------- */
   (function () {
     const el = $("#rotator");
+    if (!el) return;
     const lines = D.profile.taglines;
     let i = 0;
     if (reduceMotion) {
@@ -245,6 +248,7 @@
   /* ---------- Stats ---------- */
   (function () {
     const dl = $("#stats");
+    if (!dl) return;
     dl.innerHTML = D.stats
       .map((s) => `<div class="stat"><dt><span data-count="${s.value}">0</span>${esc(s.suffix)}</dt><dd>${esc(s.label)}</dd></div>`)
       .join("");
@@ -279,8 +283,10 @@
       )
       .join("");
   }
-  renderTimeline($("#work-list"), D.work);
-  renderTimeline($("#edu-list"), D.education);
+  if ($("#work-list")) {
+    renderTimeline($("#work-list"), D.work);
+    renderTimeline($("#edu-list"), D.education);
+  }
 
   /* ---------- Projects ---------- */
   const catLabel = Object.fromEntries(D.categories.map((c) => [c.id, c.label]));
@@ -292,8 +298,14 @@
     web: "linear-gradient(135deg,#1e3a8a,#4c1d95)",
     learning: "linear-gradient(135deg,#334155,#0f766e)",
   };
-  const state = { cat: "all", q: "", skill: null };
+  const state = { cat: "all", q: "", skill: new URLSearchParams(location.search).get("skill") };
   const grid = $("#project-grid");
+  const LIST = D.projects.filter((p) => (HOME ? p.pinned : !p.pinned));
+  const OTHER = D.projects.filter((p) => (HOME ? !p.pinned : p.pinned));
+  const otherPage = HOME
+    ? { href: "work.html", name: "Additional work" }
+    : { href: "index.html", name: "the featured projects", hash: "#projects" };
+  const skillLink = (s) => `${otherPage.href}?skill=${encodeURIComponent(s)}${otherPage.hash || ""}`;
 
   function matches(p) {
     if (state.cat !== "all" && !p.categories.includes(state.cat)) return false;
@@ -306,8 +318,11 @@
   }
 
   function renderChips() {
-    const counts = Object.fromEntries(D.categories.map((c) => [c.id, c.id === "all" ? D.projects.length : D.projects.filter((p) => p.categories.includes(c.id)).length]));
-    $("#category-chips").innerHTML = D.categories
+    const chips = $("#category-chips");
+    if (!chips) return;
+    const counts = Object.fromEntries(D.categories.map((c) => [c.id, c.id === "all" ? LIST.length : LIST.filter((p) => p.categories.includes(c.id)).length]));
+    chips.innerHTML = D.categories
+      .filter((c) => counts[c.id] > 0)
       .map((c) => `<button type="button" class="chip" data-cat="${c.id}" aria-pressed="${state.cat === c.id}">${esc(c.label)}<span class="chip__n">${counts[c.id]}</span></button>`)
       .join("");
   }
@@ -318,7 +333,7 @@
       : `<div class="card__art" style="--art:${artFor[p.categories[0]]}"><span>${esc(p.art || p.tech.slice(0, 2).join(" + "))}</span></div>`;
     const tags = p.tech.slice(0, 4).map((t) => `<span class="tag${state.skill === t ? " is-hit" : ""}">${esc(t)}</span>`).join("");
     return `<button type="button" class="card reveal${p.featured ? " is-featured" : ""}" data-id="${p.id}" aria-label="${esc(p.title)}: open details">
-      <div class="card__media">${p.featured ? '<span class="card__badge">Featured</span>' : ""}${media}</div>
+      <div class="card__media">${p.featured ? '<span class="card__badge">Flagship</span>' : ""}${media}</div>
       <div class="card__body">
         <div class="card__meta"><span>${esc(catLabel[p.categories[0]])}</span><span>${esc(p.period)}</span></div>
         <h3 class="card__title">${esc(p.title)}</h3>
@@ -330,16 +345,21 @@
   }
 
   function renderProjects() {
-    const list = D.projects.filter(matches);
+    const list = LIST.filter(matches);
     grid.innerHTML = list.map(cardHTML).join("");
-    $("#project-empty").hidden = list.length > 0;
+    const empty = $("#project-empty");
+    empty.hidden = list.length > 0;
     const note = $("#filter-note");
     if (state.skill) {
+      const elsewhere = OTHER.filter((p) => p.tech.includes(state.skill)).length;
+      const more = elsewhere ? ` · <a href="${skillLink(state.skill)}">${elsewhere} more in ${otherPage.name} →</a>` : "";
       note.hidden = false;
-      note.innerHTML = `Showing projects that use <strong>${esc(state.skill)}</strong> <button type="button" id="clear-skill">Clear</button>`;
+      note.innerHTML = `Showing ${list.length} ${list.length === 1 ? "project here that uses" : "projects here that use"} <strong>${esc(state.skill)}</strong>${more} <button type="button" id="clear-skill">Clear</button>`;
+      empty.textContent = elsewhere ? "None of the projects on this page use it; follow the link above." : "No projects match that yet.";
     } else {
       note.hidden = true;
       note.innerHTML = "";
+      empty.textContent = "No projects match that yet. Try another word or clear the filter.";
     }
     observeReveals(grid);
     if (finePointer && !reduceMotion) $$(".card", grid).forEach(addTilt);
@@ -355,21 +375,27 @@
     card.addEventListener("pointerleave", () => { card.style.transform = ""; });
   }
 
-  $("#category-chips").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-cat]");
-    if (!b) return;
-    state.cat = b.dataset.cat;
-    renderChips();
-    renderProjects();
-  });
-  let searchTimer;
-  $("#project-search").addEventListener("input", (e) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      state.q = e.target.value.trim().toLowerCase();
+  if ($("#category-chips")) {
+    $("#category-chips").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-cat]");
+      if (!b) return;
+      state.cat = b.dataset.cat;
+      renderChips();
       renderProjects();
-    }, 120);
-  });
+    });
+  }
+  let searchTimer;
+  if ($("#project-search")) {
+    $("#project-search").addEventListener("input", (e) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        state.q = e.target.value.trim().toLowerCase();
+        renderProjects();
+      }, 120);
+    });
+  }
+  const moreCount = $("#more-count");
+  if (moreCount) moreCount.textContent = `(${OTHER.length})`;
   $("#filter-note").addEventListener("click", (e) => {
     if (e.target.id === "clear-skill") setSkill(null);
   });
@@ -437,6 +463,7 @@
     const dive = e.target.closest("[data-dive]");
     if (dive) {
       modal.close();
+      if (!$("#deep-dives")) { location.href = "index.html#deep-dives"; return; }
       selectTab("tab-" + dive.dataset.dive);
       $("#deep-dives").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
       return;
@@ -445,7 +472,9 @@
     if (internal) {
       e.preventDefault();
       modal.close();
-      $(internal.getAttribute("href")).scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+      const target = $(internal.getAttribute("href"));
+      if (target) target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+      else location.href = "index.html" + internal.getAttribute("href");
       return;
     }
     const img = e.target.closest("[data-gi]");
@@ -464,6 +493,7 @@
       t.tabIndex = on ? 0 : -1;
       $("#" + t.getAttribute("aria-controls")).hidden = !on;
     });
+    if (!fraud) return;
     if (id === "tab-fraud") fraud.start();
     else fraud.stop();
   }
@@ -479,6 +509,7 @@
 
   /* ---------- Deep dive: job-shop ---------- */
   (function () {
+    if (!$("#jobshop-flow")) return;
     const J = D.deepDives.jobshop;
     const nodes = [
       ["planner", "Planner", "web UI · CLI · MCP"],
@@ -557,7 +588,7 @@
   }
 
   /* ---------- Deep dive: fraud pipeline ---------- */
-  const fraud = (function () {
+  const fraud = !$("#fraud-stages") ? null : (function () {
     const F = D.deepDives.fraud;
     const wrap = $("#fraud-stages");
     const subs = { gen: "Kafka", det: "Isolation Forest", tri: "Haiku + cache", inv: "Opus + 8 tools", rep: "case file", grd: "deterministic", hum: "interrupt()" };
@@ -661,6 +692,7 @@
 
   /* ---------- Deep dive: complaint copilot ---------- */
   (function () {
+    if (!$("#complaint-days")) return;
     const C = D.deepDives.complaint;
     const wrap = $("#complaint-days");
     wrap.innerHTML = C.days
@@ -686,15 +718,17 @@
     const n = String(i + 1).padStart(2, "0");
     return { src: `assets/img/dashboards/day${n}.webp`, thumb: `assets/img/dashboards/day${n}-thumb.webp`, cap: `Day ${i + 1} · ${title}`, title, day: i + 1 };
   });
-  $("#gallery").innerHTML = shots
-    .map((s, i) => `<button type="button" class="shot reveal" data-shot="${i}" aria-label="View ${esc(s.title)}">
-        <figure><img src="${s.thumb}" alt="${esc(s.title)} Power BI dashboard" loading="lazy" decoding="async" />
-        <figcaption><b>Day ${s.day}</b>${esc(s.title)}</figcaption></figure></button>`)
-    .join("");
-  $("#gallery").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-shot]");
-    if (b) openLightbox(shots, +b.dataset.shot);
-  });
+  if ($("#gallery")) {
+    $("#gallery").innerHTML = shots
+      .map((s, i) => `<button type="button" class="shot reveal" data-shot="${i}" aria-label="View ${esc(s.title)}">
+          <figure><img src="${s.thumb}" alt="${esc(s.title)} Power BI dashboard" loading="lazy" decoding="async" />
+          <figcaption><b>Day ${s.day}</b>${esc(s.title)}</figcaption></figure></button>`)
+      .join("");
+    $("#gallery").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-shot]");
+      if (b) openLightbox(shots, +b.dataset.shot);
+    });
+  }
 
   const lightbox = $("#lightbox");
   let lbItems = [], lbIndex = 0, lbReturn = null;
@@ -732,6 +766,7 @@
 
   /* ---------- Skills ---------- */
   (function () {
+    if (!$("#skills-list")) return;
     const count = {};
     D.projects.forEach((p) => p.tech.forEach((t) => { count[t] = (count[t] || 0) + 1; }));
     $("#skills-list").innerHTML = D.skills
@@ -750,7 +785,7 @@
   })();
 
   /* ---------- Contact ---------- */
-  $("#copy-email").addEventListener("click", () => copyText(D.profile.email).then(() => toast("Email copied")));
+  if ($("#copy-email")) $("#copy-email").addEventListener("click", () => copyText(D.profile.email).then(() => toast("Email copied")));
 
   /* ---------- Terminal ---------- */
   const term = (function () {
@@ -774,8 +809,9 @@
       help() {
         print(`<span class="t-dim">Commands:</span>
   <span class="t-cmd">whoami</span>           who I am
-  <span class="t-cmd">ls</span>               list projects
+  <span class="t-cmd">ls</span>               list projects (★ = pinned on GitHub)
   <span class="t-cmd">open</span> &lt;project&gt;   open a project (Tab completes)
+  <span class="t-cmd">more</span>             go to Additional work
   <span class="t-cmd">skills</span>           what I work with
   <span class="t-cmd">dashboards</span>       the 20 Power BI dashboards
   <span class="t-cmd">goto</span> &lt;section&gt;   ${sections.join(" · ")}
@@ -790,7 +826,11 @@
 Based in ${esc(D.profile.location)}.`);
       },
       ls() {
-        print(D.projects.map((p) => `<span class="t-cmd">${p.id.padEnd(32)}</span>${esc(p.title)}`).join("\n"));
+        print(D.projects.map((p) => `${p.pinned ? "★" : " "} <span class="t-cmd">${p.id.padEnd(32)}</span>${esc(p.title)}`).join("\n"));
+      },
+      more() {
+        if (!HOME) return print("you are already on Additional work", "t-dim");
+        location.href = "work.html";
       },
       open(arg) {
         if (!arg) return print("usage: open &lt;project&gt;  (try: ls)", "t-err");
@@ -808,6 +848,7 @@ Based in ${esc(D.profile.location)}.`);
       goto(arg) {
         if (!sections.includes(arg)) return print(`usage: goto &lt;${sections.join("|")}&gt;`, "t-err");
         dlg.close();
+        if (!$("#" + arg)) { location.href = "index.html#" + arg; return; }
         $("#" + arg).scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
       },
       contact() {
@@ -884,6 +925,7 @@ github    <a href="${D.profile.github}" target="_blank" rel="noopener">${D.profi
   renderChips();
   renderProjects();
   observeReveals();
+  if (state.skill && HOME) setTimeout(() => $("#projects").scrollIntoView(), 50);
   $("#year").textContent = new Date().getFullYear();
   if (location.hash.startsWith("#project/")) {
     const id = location.hash.slice("#project/".length);

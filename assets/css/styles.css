@@ -251,6 +251,18 @@ kbd {
 .tag.is-hit { color: var(--accent); border-color: var(--accent); }
 .card__more { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-top: 4px; }
 .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+.filter-note a { font-weight: 600; }
+.more-work {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  margin-top: 28px; padding: 20px 24px; border-radius: var(--radius); border: 1px dashed var(--border-strong); background: var(--surface);
+}
+.more-work p { margin: 0; color: var(--muted); }
+
+/* ---------- Additional work page ---------- */
+.page-head { padding-top: calc(var(--nav-h) + 56px); }
+.page-title { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -0.03em; }
+.back-link { display: inline-block; margin-bottom: 26px; font-weight: 600; font-size: 0.92rem; }
+.nav__links a[aria-current="page"] { color: var(--text); background: var(--surface); }
 
 /* ---------- Modal ---------- */
 dialog { color: var(--text); }
@@ -457,7 +469,7 @@ dialog::backdrop { background: rgba(3, 7, 18, 0.72); backdrop-filter: blur(4px);
   .flow { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   .flow__arrow { display: none; }
 }
-@media (max-width: 860px) {
+@media (max-width: 980px) {
   .nav__links {
     position: fixed; top: var(--nav-h); left: 0; right: 0; flex-direction: column; gap: 0; padding: 10px 16px 18px;
     background: var(--bg); border-bottom: 1px solid var(--border); display: none;
@@ -465,6 +477,8 @@ dialog::backdrop { background: rgba(3, 7, 18, 0.72); backdrop-filter: blur(4px);
   .nav__links.is-open { display: flex; }
   .nav__links a { padding: 12px; font-size: 1rem; }
   .nav__menu { display: inline-grid; }
+}
+@media (max-width: 860px) {
   .about, .journey { grid-template-columns: 1fr; gap: 36px; }
   .days { grid-template-columns: repeat(4, 1fr); }
   .proof { grid-template-columns: 1fr; }

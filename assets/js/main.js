@@ -287,6 +287,11 @@
     renderTimeline($("#work-list"), D.work);
     renderTimeline($("#edu-list"), D.education);
   }
+  if ($("#recognition")) {
+    $("#recognition").innerHTML = D.recognition
+      .map((r) => `<div class="recognition__item reveal"><dt>${esc(r.value)}</dt><dd><span class="recognition__label-text">${esc(r.label)}</span><span class="recognition__note">${esc(r.note)}</span></dd></div>`)
+      .join("");
+  }
 
   /* ---------- Projects ---------- */
   const catLabel = Object.fromEntries(D.categories.map((c) => [c.id, c.label]));

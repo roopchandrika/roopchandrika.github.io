@@ -82,20 +82,22 @@ window.PORTFOLIO = {
       points: ["GPA 3.9 / 4.0", "Graduate Teaching Assistant, 2024"],
     },
     {
-      when: "2017 – 2021",
+      when: "Aug 2017 – May 2021",
       title: "Bachelor's in Computer Science",
       org: "Sathyabama Institute of Science and Technology",
       points: [
-        "Gold Medal: 1st rank in Computer Science and Engineering (CGPA 9.79 / 10)",
-        "IEEE publication: Disease Prediction Using Machine Learning (2021)",
+        "Ranked 1st in Computer Science and Engineering, Class of 2021",
+        "First Class – Exemplary (CGPA 9.79 / 10)",
       ],
     },
-    {
-      when: "Certification",
-      title: "Microsoft Certified: Azure Data Fundamentals",
-      org: "DP-900",
-      points: [],
-    },
+  ],
+
+  // Highlight cards shown under Journey
+  recognition: [
+    { value: "1st", label: "in Computer Science and Engineering, Class of 2021", note: "First Class – Exemplary · CGPA 9.79 / 10" },
+    { value: "3.9 / 4.0", label: "GPA, Master's in Data Science", note: "University of Maryland, Baltimore County" },
+    { value: "IEEE", label: "Published research, 2021", note: "Disease Prediction Using Machine Learning" },
+    { value: "DP-900", label: "Microsoft Certified", note: "Azure Data Fundamentals" },
   ],
 
   categories: [

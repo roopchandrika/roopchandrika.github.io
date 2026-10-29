@@ -39,7 +39,7 @@ window.PORTFOLIO = {
     },
     {
       when: "Jan 2025 – Jan 2026",
-      title: "Software and AI Engineer",
+      title: "Software Engineer",
       org: "Esurgi, Inc",
       points: [
         "Python microservices and REST APIs for real-time healthcare data",
@@ -58,7 +58,7 @@ window.PORTFOLIO = {
     },
     {
       when: "Nov 2020 – Dec 2022",
-      title: "Data Engineer",
+      title: "Software Engineer",
       org: "National Payments Corporation of India",
       points: [
         "Cut transaction processing latency from 24 hours to under 30 minutes with event-driven microservices (Spring Boot, Kafka)",
